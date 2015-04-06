@@ -17,32 +17,36 @@ Model::Model() {
 }
 // Destructor deletes dynamically allocated memory
 Model::~Model() {
+    
 }
 
-// Given a word, what rhymes with it?
-// TODO
-vector<string> Model::getCategoriesForWord(string word) {
+vector<string> Model::doQuery(string query) {
     vector<string> result;
     int     error = 0;
     int     rec_count = 0;
     const char      *errMSG;
     const char      *tail;
-
-    error = sqlite3_prepare_v2(conn, "select word, category from rhymes order by word",1000, &res, &tail);
+    
+    error = sqlite3_prepare_v2(conn, query.c_str(), 1000, &res, &tail);
     
     if (error != SQLITE_OK) {
-        puts("We did not get any data!");
+        return result;
     }
-    
-    puts("==========================");
     
     while (sqlite3_step(res) == SQLITE_ROW)
     {
-        printf("%s|", sqlite3_column_text(res, 0));
-        printf("%s|", sqlite3_column_text(res, 1));
+        string row = (char*)sqlite3_column_text(res, 0);
+        result.push_back(row);
         rec_count++;
     }
     return result;
+}
+
+// Given a word, what rhymes with it?
+// TODO
+vector<string> Model::getCategoriesForWord(string word) {
+    string query = "select category from rhymes where word = \"" + word + "\" order by word";
+    return doQuery(query);
 }
 
 vector<string> Model::getWordsInCategory(string category) {

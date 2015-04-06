@@ -21,6 +21,11 @@ public:
     sqlite3_stmt *res;
     std::vector<std::string> getCategoriesForWord(std::string word);
     std::vector<std::string> getWordsInCategory(std::string category);
+    std::vector<std::string> getSongsInAlbum(std::string album);
+    std::vector<std::string> getsongsInArtist(std::string artist);
+    std::vector<std::string> getArtistsInResearchArtists(std::string artists);
+// private: // this should be private
+    std::vector<std::string> doQuery(std::string query);
 };
 
 #endif

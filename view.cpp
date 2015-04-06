@@ -74,6 +74,16 @@ void View::show(Model * model) {
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,
         0x00, 0x00, 0x00));
 
+    SDL_Color textColor = { 255, 255, 255 };
+    SDL_Rect dest;
+    dest.y = 30;
+    vector<string> rows = model->doQuery("select word from rhymes order by word;");
+    for (int i = 0; i < rows.size(); i++) {
+        text = TTF_RenderText_Solid( font, rows[i].c_str(), textColor );
+        dest.x = 10;
+        dest.y += 30;
+        SDL_BlitSurface( text, NULL, screen, &dest );
+    }
     // Probably call SDL_FillRect or SDL_BlitSurface a bunch here :-)
 
     SDL_UpdateWindowSurface(window);
