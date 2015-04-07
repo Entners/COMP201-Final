@@ -7,30 +7,31 @@ using namespace std;
 // Constructor initializes the object
 Model::Model() {
     int     error = 0;
-    error = sqlite3_open("ljdata.sl3", &conn);
+    error = sqlite3_open("test.db", &conn);
     
     if (error)
     {
         puts("Can not open database");
     }
-    
+    doQuery("select distinct word from rhymes where word like 'p%alysis' order by word;");
 }
 // Destructor deletes dynamically allocated memory
 Model::~Model() {
     
 }
 
-vector<string> Model::doQuery(string query) {
-    vector<string> result;
+void Model::doQuery(string query) {
     int     error = 0;
     int     rec_count = 0;
     const char      *errMSG;
     const char      *tail;
     
+    result.clear();
+    
     error = sqlite3_prepare_v2(conn, query.c_str(), 1000, &res, &tail);
     
     if (error != SQLITE_OK) {
-        return result;
+        return;
     }
     
     while (sqlite3_step(res) == SQLITE_ROW)
@@ -39,17 +40,16 @@ vector<string> Model::doQuery(string query) {
         result.push_back(row);
         rec_count++;
     }
-    return result;
 }
 
 // Given a word, what rhymes with it?
 // TODO
-vector<string> Model::getCategoriesForWord(string word) {
+void Model::getCategoriesForWord(string word) {
     string query = "select category from rhymes where word = \"" + word + "\" order by word";
-    return doQuery(query);
+    doQuery(query);
 }
 
-vector<string> Model::getWordsInCategory(string category) {
+void Model::getWordsInCategory(string category) {
     
 }
 

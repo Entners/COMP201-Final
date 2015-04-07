@@ -77,9 +77,12 @@ void View::show(Model * model) {
     SDL_Color textColor = { 255, 255, 255 };
     SDL_Rect dest;
     dest.y = 30;
-    vector<string> rows = model->doQuery("select word from rhymes order by word;");
-    for (int i = 0; i < rows.size(); i++) {
-        text = TTF_RenderText_Solid( font, rows[i].c_str(), textColor );
+    // Instead of doing a query here
+    // Get the current result set from the model.
+    // the controller should tell the model what result set to show and populate model->resultList
+//    vector<string> rows = model->doQuery("select distinct word from rhymes where word like 'p%alysis' order by word;");
+    for (int i = 0; i < model->result.size(); i++) {
+        text = TTF_RenderText_Solid( font, model->result[i].c_str(), textColor );
         dest.x = 10;
         dest.y += 30;
         SDL_BlitSurface( text, NULL, screen, &dest );

@@ -25,7 +25,30 @@ void Controller::loop() {
     direction[SDLK_DOWN] = DOWN;
     direction[SDLK_LEFT] = LEFT;
     direction[SDLK_RIGHT] = RIGHT;
+    
+    std::map<SDL_Keycode, char> text;
+    text[SDLK_a] = 'a';
+    text[SDLK_b] = 'b';
+    text[SDLK_c] = 'c';
+    text[SDLK_d] = 'd';
+    text[SDLK_e] = 'a';
+    text[SDLK_f] = 'a';
+    text[SDLK_g] = 'a';
+    text[SDLK_h] = 'a';
+    text[SDLK_i] = 'a';
+    text[SDLK_j] = 'a';
+    text[SDLK_k] = 'a';
+    text[SDLK_l] = 'a';
+    text[SDLK_m] = 'a';
+    text[SDLK_n] = 'a';
+    text[SDLK_o] = 'a';
+    text[SDLK_p] = 'a';
+    text[SDLK_q] = 'a';
+    text[SDLK_a] = 'a';
+    text[SDLK_a] = 'a';
+    
 
+    string textEntry = "";
     while(!model->gameOver()) {
         currentTime = SDL_GetTicks();
         // Do stuff here to animate as necessary
@@ -43,6 +66,14 @@ void Controller::loop() {
 //                    model->go(direction[e.key.keysym.sym]);
                 break;
                 default:
+                        // the user pressed enter
+                        if (e.key.keysym.sym == SDLK_RETURN) {
+                            // send textEntry to the model
+//                            model->doSomethingWith(textEntry);
+                        } else {
+                            textEntry = textEntry + text[e.key.keysym.sym];
+                            // if you want, pass the word as you type it in...
+                        }
                 break;
                 }
             case SDL_MOUSEBUTTONDOWN:
