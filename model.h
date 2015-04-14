@@ -6,6 +6,7 @@
 #include <string>
 
 enum Direction { UP, DOWN, LEFT, RIGHT };
+enum Collection { WORD, ARTIST, SONG, ALBUM };
 
 // The model manages the state of the game
 class Model {
@@ -17,16 +18,19 @@ public:
     // Is the game over?
     bool gameOver();
     // TODO: Put your stuff here
-    sqlite3 *conn;
-    sqlite3_stmt *res;
+    Collection collection;
+    void setText(std::string text);
     void getCategoriesForWord(std::string word);
     void getWordsInCategory(std::string category);
     void getSongsInAlbum(std::string album);
     void getsongsInArtist(std::string artist);
     void getArtistsInResearchArtists(std::string artists);
-// private: // this should be private
-    void doQuery(std::string query);
     std::vector<std::string> result;
+// private: // this should be private
+    std::string text;
+    sqlite3 *conn;
+    sqlite3_stmt *res;
+    void doQuery(std::string query);
 };
 
 #endif

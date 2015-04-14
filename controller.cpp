@@ -31,22 +31,28 @@ void Controller::loop() {
     text[SDLK_b] = 'b';
     text[SDLK_c] = 'c';
     text[SDLK_d] = 'd';
-    text[SDLK_e] = 'a';
-    text[SDLK_f] = 'a';
-    text[SDLK_g] = 'a';
-    text[SDLK_h] = 'a';
-    text[SDLK_i] = 'a';
-    text[SDLK_j] = 'a';
-    text[SDLK_k] = 'a';
-    text[SDLK_l] = 'a';
-    text[SDLK_m] = 'a';
-    text[SDLK_n] = 'a';
-    text[SDLK_o] = 'a';
-    text[SDLK_p] = 'a';
-    text[SDLK_q] = 'a';
-    text[SDLK_a] = 'a';
-    text[SDLK_a] = 'a';
-    
+    text[SDLK_e] = 'e';
+    text[SDLK_f] = 'f';
+    text[SDLK_g] = 'g';
+    text[SDLK_h] = 'h';
+    text[SDLK_i] = 'i';
+    text[SDLK_j] = 'j';
+    text[SDLK_k] = 'k';
+    text[SDLK_l] = 'l';
+    text[SDLK_m] = 'm';
+    text[SDLK_n] = 'n';
+    text[SDLK_o] = 'o';
+    text[SDLK_p] = 'p';
+    text[SDLK_q] = 'q';
+    text[SDLK_r] = 'r';
+    text[SDLK_s] = 's';
+    text[SDLK_t] = 't';
+    text[SDLK_u] = 'u';
+    text[SDLK_v] = 'v';
+    text[SDLK_w] = 'w';
+    text[SDLK_x] = 'x';
+    text[SDLK_y] = 'y';
+    text[SDLK_z] = 'z';
 
     string textEntry = "";
     while(!model->gameOver()) {
@@ -69,7 +75,7 @@ void Controller::loop() {
                         // the user pressed enter
                         if (e.key.keysym.sym == SDLK_RETURN) {
                             // send textEntry to the model
-//                            model->doSomethingWith(textEntry);
+                            model->setText(textEntry);
                         } else {
                             textEntry = textEntry + text[e.key.keysym.sym];
                             // if you want, pass the word as you type it in...
@@ -77,6 +83,8 @@ void Controller::loop() {
                 break;
                 }
             case SDL_MOUSEBUTTONDOWN:
+                    // SDL_HasIntersection(const SDL_Rect* A, const SDL_Rect* B)
+                    // e.button.y and e.button.x
                 break;
             }
         }

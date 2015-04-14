@@ -53,6 +53,10 @@ void Model::getWordsInCategory(string category) {
     
 }
 
+void Model::setText(std::string text) {
+    this->text = text;
+}
+
 bool Model::gameOver() {
     return false;
 }
