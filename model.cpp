@@ -1,6 +1,7 @@
 #include "model.h"
 #include <cstdlib>
 #include <ctime>
+#include <iostream>
 
 using namespace std;
 
@@ -13,7 +14,8 @@ Model::Model() {
     {
         puts("Can not open database");
     }
-    doQuery("select distinct word from rhymes where word like 'p%alysis' order by word;");
+    entry=WORDS_LIKE_TEXT;
+    operation=SEARCH;
 }
 // Destructor deletes dynamically allocated memory
 Model::~Model() {
@@ -28,7 +30,16 @@ void Model::doQuery(string query) {
     
     result.clear();
     
+    // Add prefix thingy for like query
+    if (entry == WORDS_LIKE_TEXT) {
+        text = "%" + text;
+    }
+    
     error = sqlite3_prepare_v2(conn, query.c_str(), 1000, &res, &tail);
+    sqlite3_bind_text(res, 1, text.c_str(), -1, SQLITE_TRANSIENT);
+    
+    cout << "query: " << query << endl;
+    cout << "text: " << text << endl;
     
     if (error != SQLITE_OK) {
         return;
@@ -42,19 +53,29 @@ void Model::doQuery(string query) {
     }
 }
 
-// Given a word, what rhymes with it?
-// TODO
-void Model::getCategoriesForWord(string word) {
-    string query = "select category from rhymes where word = \"" + word + "\" order by word";
-    doQuery(query);
-}
-
-void Model::getWordsInCategory(string category) {
-    
-}
-
+// The text the user entered
 void Model::setText(std::string text) {
     this->text = text;
+}
+
+// Do a query
+void Model::runQuery() {
+    doQuery(templates[operation][entry]);
+}
+
+// Set the operation
+void Model::setOperation(Operation op) {
+    this->operation = op;
+}
+
+// Set the entry
+void Model::setEntry(Entry entry) {
+    this->entry = entry;
+}
+
+// Get the text
+string Model::getText() {
+    return text;
 }
 
 bool Model::gameOver() {

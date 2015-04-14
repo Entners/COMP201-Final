@@ -1,5 +1,6 @@
 #include "controller.h"
 #include <map>
+#include <iostream>
 
 using namespace std;
 
@@ -55,6 +56,17 @@ void Controller::loop() {
     text[SDLK_z] = 'z';
 
     string textEntry = "";
+    SDL_Rect mouse;
+    
+    SDL_Rect buttons[5];
+    
+    for (int i = 0; i < 5; i++) {
+        buttons[i].x = 120*i;
+        buttons[i].y = 100;
+        buttons[i].w = 100;
+        buttons[i].h = 30;
+    }
+    
     while(!model->gameOver()) {
         currentTime = SDL_GetTicks();
         // Do stuff here to animate as necessary
@@ -75,16 +87,25 @@ void Controller::loop() {
                         // the user pressed enter
                         if (e.key.keysym.sym == SDLK_RETURN) {
                             // send textEntry to the model
-                            model->setText(textEntry);
+                            model->runQuery();
                         } else {
                             textEntry = textEntry + text[e.key.keysym.sym];
+                            model->setText(textEntry);
                             // if you want, pass the word as you type it in...
                         }
                 break;
                 }
             case SDL_MOUSEBUTTONDOWN:
-                    // SDL_HasIntersection(const SDL_Rect* A, const SDL_Rect* B)
-                    // e.button.y and e.button.x
+                    mouse.x = e.button.x;
+                    mouse.y = e.button.y;
+                    mouse.w = 1;
+                    mouse.h = 1;
+                    for (int i = 0; i < 5; i++) {
+                        if (SDL_HasIntersection(&buttons[i], &mouse)) {
+                            cout << "got here" << endl;
+                            model->setEntry((Entry)i);
+                        }
+                    }
                 break;
             }
         }

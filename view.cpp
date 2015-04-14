@@ -74,13 +74,30 @@ void View::show(Model * model) {
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,
         0x00, 0x00, 0x00));
 
+    
+    SDL_Rect buttons[5];
+    
+    for (int i = 0; i < 5; i++) {
+        buttons[i].x = 120*i;
+        buttons[i].y = 100;
+        buttons[i].w = 100;
+        buttons[i].h = 30;
+        SDL_FillRect(screen, &buttons[i], SDL_MapRGB(screen->format,
+                                              0x00, 0xff, 0x00));
+    }
+
     SDL_Color textColor = { 255, 255, 255 };
     SDL_Rect dest;
     dest.y = 30;
     // Instead of doing a query here
     // Get the current result set from the model.
     // the controller should tell the model what result set to show and populate model->resultList
-//    vector<string> rows = model->doQuery("select distinct word from rhymes where word like 'p%alysis' order by word;");
+    text = TTF_RenderText_Solid( font, model->getText().c_str(), textColor );
+    dest.x = 10;
+    dest.y += 30;
+    SDL_BlitSurface( text, NULL, screen, &dest );
+    SDL_FreeSurface(text);
+
     for (int i = 0; i < model->result.size(); i++) {
         text = TTF_RenderText_Solid( font, model->result[i].c_str(), textColor );
         dest.x = 10;
