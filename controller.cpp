@@ -105,7 +105,6 @@ void Controller::loop() {
                         if (SDL_HasIntersection(&buttons[i], &mouse)) {
                             //instead of got here it will open all of the words in the category
                             model->setOperation((Operation)i);
-                            
                         }
                     }
                 break;

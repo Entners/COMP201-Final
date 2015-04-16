@@ -98,11 +98,19 @@ void View::show(Model * model) {
         drawText(labels[i], buttons[i].x, buttons[i].y);
     }
     
+    SDL_Rect dest;
+    dest.x = 300;
+    dest.y = 30;
+    dest.w = 300;
+    dest.h = 30;
+    
     // Show the word text entry field
     if (model->operation != CLEAR ) {
+        SDL_FillRect(screen, &dest, SDL_MapRGB(screen->format,
+                                                     0xcc, 0xcc, 0xcc));
         // draw a box around here (perhaps a box within a box using fillrect
-        drawText("Enter word:", 10, 30);
-        drawText(model->word, 200, 30);
+        drawText("Enter word:", 100, 30);
+        drawText(model->word, dest.x, dest.y);
     }
     
     int y = 60;
@@ -111,6 +119,7 @@ void View::show(Model * model) {
         case SEARCH_BY_WORD: case SEARCH_BY_CATEGORY:
             for (int i = 0; i < model->result.size(); i++) {
                 drawText(model->result[i].word, 10, y);
+                drawText(model->result[i].category, 200, y);
                 y += 30;
             }
             break;
