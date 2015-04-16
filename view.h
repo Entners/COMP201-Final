@@ -22,6 +22,7 @@ private:
     SDL_Window* window;
     SDL_Surface* screen;
     bool fail;
+    void drawText(std::string str, int x, int y);
     SDL_Surface* load(char * path);
     SDL_Surface* text;
 //    Mix_Music * music;

@@ -67,7 +67,7 @@ void Controller::loop() {
         buttons[i].h = 30;
     }
     
-    while(!model->gameOver()) {
+    while(true) {
         currentTime = SDL_GetTicks();
         // Do stuff here to animate as necessary
         view->show(model);
@@ -88,6 +88,7 @@ void Controller::loop() {
                         if (e.key.keysym.sym == SDLK_RETURN) {
                             // send textEntry to the model
                             model->runQuery();
+                            textEntry = "";
                         } else {
                             textEntry = textEntry + text[e.key.keysym.sym];
                             model->setText(textEntry);
@@ -102,8 +103,9 @@ void Controller::loop() {
                     mouse.h = 1;
                     for (int i = 0; i < 5; i++) {
                         if (SDL_HasIntersection(&buttons[i], &mouse)) {
-                            cout << "got here" << endl;
-                            model->setEntry((Entry)i);
+                            //instead of got here it will open all of the words in the category
+                            model->setOperation((Operation)i);
+                            
                         }
                     }
                 break;

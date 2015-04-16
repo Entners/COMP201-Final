@@ -34,7 +34,6 @@ View::View(string title, int width, int height) {
         return;
     }
     // Load assets
-//    snake = load("assets/snake.png");
 //    music = Mix_LoadMUS("assets/2Inventions_-_Johaness_Gilther_-_Don_t_leave_me.mp3");
 //    if (music != NULL) {
 //       Mix_PlayMusic( music, -1 );
@@ -69,46 +68,59 @@ SDL_Surface* View::load(char * path) {
     return optimizedSurface;
 }
 
+void View::drawText(string str, int x, int y) {
+    SDL_Rect dest;
+    SDL_Color textColor = { 255, 255, 255 };
+    text = TTF_RenderText_Solid( font, str.c_str(), textColor );
+    dest.x = x;
+    dest.y = y;
+    SDL_BlitSurface( text, NULL, screen, &dest );
+    SDL_FreeSurface(text);
+}
+
 void View::show(Model * model) {
 
     SDL_FillRect(screen, NULL, SDL_MapRGB(screen->format,
         0x00, 0x00, 0x00));
 
-    SDL_Color textColor = { 255, 255, 255 };
     
     SDL_Rect buttons[5];
-    string labels[5] = {"", "Category", "Word", "Foo", "Bar"};
+    string labels[] = {"Clear", "Search by Word", "Search by Category", "Add", "Remove"};
     
+    // Draw buttons and labels
     for (int i = 0; i < 5; i++) {
         buttons[i].x = 120*i;
         buttons[i].y = 100;
-        buttons[i].w = 100;
+        buttons[i].w = 110;
         buttons[i].h = 30;
         SDL_FillRect(screen, &buttons[i], SDL_MapRGB(screen->format,
                                               0x00, 0xff, 0x00));
-        text = TTF_RenderText_Solid( font, labels[i].c_str(), textColor );
-        SDL_BlitSurface( text, NULL, screen, &buttons[i] );
-        SDL_FreeSurface(text);
+        drawText(labels[i], buttons[i].x, buttons[i].y);
     }
-
-    SDL_Rect dest;
-    dest.y = 30;
-    // Instead of doing a query here
-    // Get the current result set from the model.
-    // the controller should tell the model what result set to show and populate model->resultList
-    text = TTF_RenderText_Solid( font, model->getText().c_str(), textColor );
-    dest.x = 10;
-    dest.y += 30;
-    SDL_BlitSurface( text, NULL, screen, &dest );
-    SDL_FreeSurface(text);
-
-    for (int i = 0; i < model->result.size(); i++) {
-        text = TTF_RenderText_Solid( font, model->result[i].c_str(), textColor );
-        dest.x = 10;
-        dest.y += 30;
-        SDL_BlitSurface( text, NULL, screen, &dest );
+    
+    // Show the word text entry field
+    if (model->operation != CLEAR ) {
+        // draw a box around here (perhaps a box within a box using fillrect
+        drawText("Enter word:", 10, 30);
+        drawText(model->word, 200, 30);
     }
-    // Probably call SDL_FillRect or SDL_BlitSurface a bunch here :-)
+    
+    int y = 60;
+    // Show result set
+    switch (model->operation) {
+        case SEARCH_BY_WORD: case SEARCH_BY_CATEGORY:
+            for (int i = 0; i < model->result.size(); i++) {
+                drawText(model->result[i].word, 10, y);
+                y += 30;
+            }
+            break;
+        case ADD:
+            break;
+        case REMOVE:
+            break;
+        case CLEAR: default:
+            break;
+    }
 
     SDL_UpdateWindowSurface(window);
 }

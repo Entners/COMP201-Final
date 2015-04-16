@@ -6,18 +6,26 @@
 #include <string>
 
 enum Direction { UP, DOWN, LEFT, RIGHT };
-enum Operation { SEARCH, ADD, EDIT, REMOVE };
-enum Entry { NOTHING, CATEGORY_FOR_WORD, WORDS_IN_CATEGORY, WORDS_LIKE_TEXT, SONGS_IN_ALBUM, SONGS_BY_ARTIST };
+// What are we doing at the moment?
+enum Operation { CLEAR, SEARCH_BY_WORD, SEARCH_BY_CATEGORY, ADD, REMOVE };
 
-const std::string templates[4][6] = {
-    // SEARCH
-    { "", "SELECT category from rhymes where word = ?1 order by category", "SELECT word from rhymes where category = ?1 order by word", "SELECT word from rhymes where word like ?1", "", "" },
+// SQL query templates
+const std::string templates[5] = {
+    // CLEAR does nothing
+    "",
+    // SEARCH_BY_WORD
+    "SELECT word, category from rhymes where word = ?1 order by category",
+    // SEARCH_BY_CATEGORY
+    "SELECT word, category from rhymes where category = ?2 order by word",
     // ADD
-    { "", "insert into rhymes (word,category) values (?1,?2);", "", "", "", "" },
-    // EDIT
-    { "", "update rhymes set word = ?1 where category = ?2 and word = ?1", "", "", "", "" },
+    "insert into rhymes (word,category) values (?1,?2);",
     // REMOVE
-    { "", "delete from rhymes where category = ?1", "", "", "", "" }
+    "delete from rhymes where word = ?1"
+};
+
+struct Row {
+    std::string word;
+    std::string category;
 };
 
 // The model manages the state of the game
@@ -27,25 +35,22 @@ public:
     Model();
     // Destructor deletes all dynamically allocated stuff
     ~Model();
-    // Is the game over?
-    bool gameOver();
-    // TODO: Put your stuff here
-    Entry entry;
+    // What we're doing at the moment
     Operation operation;
-    void setText(std::string text);
-    std::string getText();
-    std::vector<std::string> result;
+    
+    // The current word
+    std::string word;
+    // The current category
+    std::string category;
+    
+    std::vector<Row> result;
     void runQuery();
     void setOperation(Operation op);
-    void setEntry(Entry entry);
+    void setText(std::string text);
 private: // this should be private
     sqlite3 *conn;
     sqlite3_stmt *res;
     void doQuery(std::string query);
-    // placeholder 1
-    std::string text;
-    // placeholder 2
-    std::string word;
 };
 
 #endif
